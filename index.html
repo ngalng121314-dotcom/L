@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Do You Love Me?</title>
+<style>
+body {
+    margin: 0;
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(to bottom, #1a1a1a, #000);
+    color: white;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    overflow: hidden;
+}
+
+.container {
+    text-align: center;
+}
+
+h1 {
+    font-size: 2.5rem;
+}
+
+.buttons {
+    margin-top: 20px;
+}
+
+button {
+    padding: 12px 25px;
+    margin: 10px;
+    font-size: 1rem;
+    border: none;
+    border-radius: 25px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+#yes {
+    background: #ff4d6d;
+    color: white;
+}
+
+#no {
+    background: #444;
+    color: white;
+}
+
+.message {
+    margin-top: 20px;
+    font-size: 1.4rem;
+    opacity: 0;
+    transition: opacity 0.5s ease;
+}
+
+.show {
+    opacity: 1;
+}
+
+.heart {
+    position: absolute;
+    bottom: -20px;
+    color: #ff4d6d;
+    animation: float 5s linear infinite;
+}
+
+@keyframes float {
+    from { transform: translateY(100vh); opacity: 1; }
+    to { transform: translateY(-10vh); opacity: 0; }
+}
+</style>
+</head>
+<body>
+
+<div class="container">
+    <h1>Do you love me? 💖</h1>
+    <div class="buttons">
+        <button id="yes" onclick="yesClick()">Yes</button>
+        <button id="no" onclick="noClick()">No</button>
+    </div>
+    <div id="message" class="message"></div>
+</div>
+
+<script>
+let yesCount = 0;
+let noCount = 0;
+
+function yesClick() {
+    const msg = document.getElementById('message');
+    yesCount++;
+
+    if (yesCount === 1) {
+        msg.innerText = "Are you sure?";
+    } else if (yesCount === 2) {
+        msg.innerText = "Think again 😏";
+    } else {
+        msg.innerText = "I know 😌 I love you too ❤️";
+        startHearts();
+    }
+
+    msg.classList.add('show');
+}
+
+function noClick() {
+    const yesBtn = document.getElementById('yes');
+    const noBtn = document.getElementById('no');
+
+    noCount++;
+
+    // grow yes button
+    yesBtn.style.transform = `scale(${1 + noCount * 0.3})`;
+
+    // shrink no button
+    noBtn.style.transform = `scale(${1 - noCount * 0.2})`;
+
+    if (noCount >= 4) {
+        noBtn.style.display = 'none';
+    }
+}
+
+function startHearts() {
+    setInterval(() => {
+        const heart = document.createElement('div');
+        heart.classList.add('heart');
+        heart.innerHTML = '❤️';
+        heart.style.left = Math.random() * 100 + 'vw';
+        heart.style.fontSize = Math.random() * 20 + 10 + 'px';
+        document.body.appendChild(heart);
+        setTimeout(() => heart.remove(), 5000);
+    }, 300);
+}
+</script>
+
+</body>
+</html>
