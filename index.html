@@ -60,12 +60,22 @@ button {
     opacity: 1;
 }
 
+.heart, .flower {
+    position: absolute;
+    bottom: -20px;
+    animation: float 5s linear infinite;
+}
+
 .heart {
     position: absolute;
     bottom: -20px;
     color: #ff4d6d;
+    font-size: 28px; /* bigger */
+    text-shadow: 0 0 10px #ff4d6d, 0 0 20px #ff4d6d; /* glow */
+    opacity: 1;
     animation: float 5s linear infinite;
 }
+.flower { color: #ff85a2; }
 
 @keyframes float {
     from { transform: translateY(100vh); opacity: 1; }
@@ -87,6 +97,7 @@ button {
 <script>
 let yesCount = 0;
 let noCount = 0;
+let started = false;
 
 function yesClick() {
     const msg = document.getElementById('message');
@@ -98,7 +109,10 @@ function yesClick() {
         msg.innerText = "Think again 😏";
     } else {
         msg.innerText = "I know 😌 I love you too ❤️";
-        startHearts();
+        if (!started) {
+            startEffects();
+            started = true;
+        }
     }
 
     msg.classList.add('show');
@@ -110,10 +124,7 @@ function noClick() {
 
     noCount++;
 
-    // grow yes button
     yesBtn.style.transform = `scale(${1 + noCount * 0.3})`;
-
-    // shrink no button
     noBtn.style.transform = `scale(${1 - noCount * 0.2})`;
 
     if (noCount >= 4) {
@@ -121,7 +132,37 @@ function noClick() {
     }
 }
 
-function startHearts() {
+function startEffects() {
+    const btn = document.getElementById('yes');
+    const rect = btn.getBoundingClientRect();
+
+    // hearts from button 💗 (move to center and fade)
+    setInterval(() => {
+        const heart = document.createElement('div');
+        heart.classList.add('heart');
+        heart.innerHTML = '💗';
+
+        const startX = rect.left + rect.width / 2;
+        const startY = window.innerHeight - 60;
+        const endY = window.innerHeight / 2;
+
+        heart.style.left = startX + 'px';
+        heart.style.bottom = '0px';
+        heart.style.position = 'absolute';
+        heart.style.transition = 'transform 1.5s ease-out, opacity 1.5s ease-out';
+
+        document.body.appendChild(heart);
+
+        // trigger movement
+        setTimeout(() => {
+            heart.style.transform = `translateY(-${startY - endY}px)`;
+            heart.style.opacity = '0';
+        }, 50);
+
+        setTimeout(() => heart.remove(), 1600);
+    }, 300);
+
+    // floating hearts from bottom ❤️
     setInterval(() => {
         const heart = document.createElement('div');
         heart.classList.add('heart');
@@ -130,7 +171,18 @@ function startHearts() {
         heart.style.fontSize = Math.random() * 20 + 10 + 'px';
         document.body.appendChild(heart);
         setTimeout(() => heart.remove(), 5000);
-    }, 300);
+    }, 400);
+
+    // flowers 🌸
+    setInterval(() => {
+        const flower = document.createElement('div');
+        flower.classList.add('flower');
+        flower.innerHTML = '🌸';
+        flower.style.left = Math.random() * 100 + 'vw';
+        flower.style.fontSize = Math.random() * 20 + 12 + 'px';
+        document.body.appendChild(flower);
+        setTimeout(() => flower.remove(), 5000);
+    }, 600);
 }
 </script>
 
